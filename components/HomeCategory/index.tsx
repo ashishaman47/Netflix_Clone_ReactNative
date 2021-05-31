@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Image, FlatList } from 'react-native';
+import { Image, FlatList, Pressable } from 'react-native';
 import { Text, View } from '../../components/Themed';
 
 import styles from './styles'
+import {useNavigation} from '@react-navigation/native'
 
 // defing the type of props
 interface HomeCategoryProps {
@@ -20,6 +21,12 @@ interface HomeCategoryProps {
 export default function HomeCategory(props: HomeCategoryProps) {
 
     const {category} = props;
+    const navigation = useNavigation();
+
+    const onMoviePress = (movie) => {
+        console.log(movie.id);
+        navigation.navigate('MovieDetailsScreen', {id: movie.id})
+    }
 
   return (
     <>
@@ -27,7 +34,10 @@ export default function HomeCategory(props: HomeCategoryProps) {
       <FlatList 
       data={category.movies}
       renderItem={({item}) => (
-        <Image style={styles.image} source={{uri: item.poster}} />)}
+        <Pressable onPress={()=> onMoviePress(item)}>
+          <Image style={styles.image} source={{uri: item.poster}} />
+        </Pressable>
+        )}
         // horizontal scrollable
         horizontal
         showsHorizontalScrollIndicator={false}
