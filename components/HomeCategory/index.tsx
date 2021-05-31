@@ -13,7 +13,7 @@ interface HomeCategoryProps {
         movies: {
             id: string,
             poster: string,
-        }[] // since movie is an object of array
+        }[] // since movie is an array of objects(id,poster)
     }
 }
 
@@ -30,6 +30,7 @@ export default function HomeCategory(props: HomeCategoryProps) {
         <Image style={styles.image} source={{uri: item.poster}} />)}
         // horizontal scrollable
         horizontal
+        showsHorizontalScrollIndicator={false}
       />
     </>
   );
