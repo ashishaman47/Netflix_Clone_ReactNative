@@ -7,6 +7,7 @@ import styles from './styles'
 import movie from '../../assets/data/movies'
 import EpisodeItem from '../../components/EpisodeItem'
 import { Picker } from '@react-native-picker/picker'
+import VideoPlayer from '../../components/VideoPlayer'
 
 const firstSeason = movie.seasons.items[0]
 const firstEpisode = firstSeason.episodes.items[0]
@@ -19,17 +20,18 @@ const MovieDetailsScreen = () => {
     // storing the current season
     const [currentSeason, setCurrentSeason] = useState(firstSeason);
 
+    // storing the current episode
+    const [currentEpisode, setCurrentEpisode] = useState(firstEpisode);
+
     return (
         <View style={styles.container}>
-            <Image 
-            style={styles.image}
-            source={{uri: firstEpisode.poster}}
-            />
+            <VideoPlayer episode={currentEpisode} />
 
             <FlatList 
             data={currentSeason.episodes.items}
             renderItem={({item}) => (
-                <EpisodeItem episode={item} />
+                // we need to setCurrentEpisode --> whenever we click on any episode from list
+                <EpisodeItem episode={item} onPress={setCurrentEpisode} />
             )}
             // adding header component with list 
             ListHeaderComponent={(
