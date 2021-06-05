@@ -1,3 +1,4 @@
+import {Storage} from 'aws-amplify';
 import { Video } from 'expo-av';
 import { Playback } from 'expo-av/build/AV';
 import { unloadAsync } from 'expo-font';
@@ -16,9 +17,21 @@ const VideoPlayer = (props: VideoPlayerProps) => {
     const {episode} = props;
 
     const video = useRef<Playback>(null);
+    const [videoURL, setVideoURL] = useState('');
 
     // keep track of video status
     const [status, setStatus] = useState({});
+
+    useEffect(()=>{
+        if(episode.video.startsWith('http')) {
+            setVideoURL(episode.video)
+            return;
+        }
+
+        Storage.get(episode.video)
+        .then(setVideoURL)
+    },[episode])
+
 
     useEffect(()=>{
         // whenever episode changes --> load current video --> which we'll call right away
@@ -30,15 +43,19 @@ const VideoPlayer = (props: VideoPlayerProps) => {
         (async () => {
             await video?.current?.unloadAsync();
             await video?.current?.loadAsync(
-                {uri: episode.video},
+                {uri: videoURL},
                 {},
                 false,
             );
         })();
 
-    }, [episode])
+    }, [videoURL])
 
-    console.log(episode);
+    // console.log(episode);
+
+    if(videoURL === '') {
+        return null;
+    }
 
     return (
         <View>
@@ -46,7 +63,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
                 ref={video}
                 style={styles.video}
                 source={{
-                uri: episode.video,
+                uri: videoURL,
                 }}
                 
                 // adding poster img over video
@@ -56,7 +73,7 @@ const VideoPlayer = (props: VideoPlayerProps) => {
                 posterStyle={{
                     resizeMode: 'cover',
                 }}
-                usePoster={true}
+                usePoster={false}
 
                 useNativeControls
                 resizeMode="contain"

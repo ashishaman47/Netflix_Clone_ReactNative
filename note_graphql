@@ -1,0 +1,66 @@
+# GraphQl EXPLANATION
+
+# for every type in our graphQl schema that we "annotate with model" --> Amplify will setup database table with AWS Dynamo DB
+# will setup all the permisions to connect with it
+# will setup AppSync models and so on.
+
+type Category @model {
+  id: ID!
+  title: String!
+
+# movie --> will be array of Movie --> this will be a connection --> which will reference the keyName(byCategory) and the fields is the field that we want to match from this model(Category)
+  movies: [Movie] @connection(keyName="byCategory", fields=["id"])
+}
+
+# Now whenever we query Category --> we'll be able to get all the movies which that category contains
+
+# using this key we can refernce movie in --> Category
+type Movie @model 
+@key(name = "byCategory", fields=["categoryID"])
+{
+  id: ID!
+  title: String!
+  poster: String!
+  year: Int
+  numberOfSeasons: Int
+
+  plot: String
+  cast: String
+  creator: String
+
+# Movie will belong to a category --> thats why we need a category id
+  categoryID: ID!
+
+  seasons: [Season] @connection(keyName="byMovie", fields=["id"])
+}
+
+# Creating connection Movie with Season
+type Season @model 
+@key(name = "byMovie", fields=["movieID"])
+{
+  id: ID!
+  name: String!
+
+  movieID: ID!
+
+  episodes: [Episode] @connection(keyName="bySeason", fields=["id"])
+
+  # Reverse relation with Movie and Season
+  movie: Movie @connection(fields=["movieID"])
+}
+
+type Episode @model 
+@key(name="bySeason", fields=["seasonID"])
+{
+  id: ID!
+  title: String!
+  poster: String!
+  duration: String!
+  plot: String!
+  video: String!
+
+  seasonID: ID!
+
+  # Creating a Reverse Relation b/w Episode and Season --> From Episode we can get which season it belongs
+  season: Season @connection(fields=["seasonID"])
+}

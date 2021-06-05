@@ -77,7 +77,7 @@
     universal-cookie "^4.0.4"
     zen-observable-ts "0.8.19"
 
-"@aws-amplify/datastore@3.0.3":
+"@aws-amplify/datastore@3.0.3", "@aws-amplify/datastore@^3.0.3":
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/@aws-amplify/datastore/-/datastore-3.0.3.tgz#7b0990ab18bf02fd11495004d7588dc1bd99a92c"
   integrity sha512-/Sj9/hPwa7LdS0JDMwC265M/w9f8NBaRI5FjIDW7qlxh0j39NkNFi6ozcRfMgWePw/aBGM6S/sJmg+bvms1X9A==
